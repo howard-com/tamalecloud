@@ -1,0 +1,28 @@
+###服务启动端口号
+server:
+   port: ${cache_service_port}
+spring:
+   application:
+      ###服务名称(服务注册到eureka名称)
+      name: ${cache_service_name}   
+
+eureka:
+   instance:
+      ###自定义服务id
+      instance-id: ${spring.application.name}:${random.int[1,10000]}
+      ###点击服务列表时用ip跳转
+      prefer-ip-address: true
+      ###心跳（续约）间隔时间，默认90s, 可不配置
+      lease-renewal-interval-in-seconds: 1
+      ###发呆（过期）时间，心跳停止超过此时间后服务会被Eureka server剔除，默认30s，可不配置
+      lease-expiration-duration-in-seconds: 3
+      ###更改instance id的生成机制以避免重复
+   client:
+      ###是否需要从eureka上获取注册信息
+      fetch-registry: true
+      ###注册到注册中心
+      register-with-eureka: true
+      ###Enreka客户端多久去server上拉去一次列表（定时刷新本地缓存时间），默认为90秒
+      registry-fetch-interval-seconds: 5
+      ###最初复制实例信息到eureka服务器所需的时间（s），默认为40秒
+      initial-instance-info-replication-interval-seconds: 1

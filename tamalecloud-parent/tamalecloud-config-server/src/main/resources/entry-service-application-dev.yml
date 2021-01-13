@@ -1,0 +1,45 @@
+###服务启动端口号
+server:
+   port: ${entry_service_port}
+spring:
+   application:
+      ###服务名称(服务注册到eureka名称)
+      name: ${entry_service_name}
+   cloud:
+      loadbalancer:
+         cache:
+            ###是否开启spring cloud 负载均衡的缓存
+            enabled: true
+            ###缓存过期时间（s） 默认35秒
+            ttl: 1
+
+eureka:
+   instance:
+      ###心跳（续约）间隔时间，默认90s, 可不配置
+      lease-renewal-interval-in-seconds: 5
+      ###发呆（过期）时间，心跳停止超过此时间后服务会被Eureka server剔除，默认30s，可不配置
+      lease-expiration-duration-in-seconds: 6
+   client:
+      ###是否需要从eureka上获取注册信息
+      fetch-registry: true
+      ###注册到注册中心
+      register-with-eureka: true
+      ###Enreka客户端多久去server上拉取一次列表（定时刷新本地缓存时间），默认为90秒
+      registry-fetch-interval-seconds: 5
+      ###最初复制实例信息到eureka服务器所需的时间（s），默认为40秒
+      initial-instance-info-replication-interval-seconds: 1
+
+###Acturator监控点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "refresh" #暴露refresh端点
+
+###Ribbon参数设置。Spring cloud 20.0.0以后已经不用     
+#tamalecloud-cache-service:
+#   ribbon:      
+      ###切换Ribbon负载均衡策略
+      ###NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+      ###ribbon缓存时间
+#      server-list-refresh-interval: 5000

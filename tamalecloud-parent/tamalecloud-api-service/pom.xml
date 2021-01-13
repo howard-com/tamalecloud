@@ -1,0 +1,16 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>tamalecloud</groupId>
+    <artifactId>tamalecloud-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>tamalecloud-api-service</artifactId>
+  <packaging>pom</packaging>
+  <description>All of the common interfaces of service will be put in this package.</description>
+  <modules>
+  	<module>tamalecloud-api-entity</module>
+  	<module>tamalecloud-api-entry</module>
+  	<module>tamalecloud-api-cache</module>
+  </modules>
+</project>
