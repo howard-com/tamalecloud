@@ -59,6 +59,6 @@ public class EntityServiceImpl implements IEntityService {
 
 	@RequestMapping("/getFirmInfo")
 	public String getFirmInfo() {
-		return new StringBuffer("当前 firm_id:").append(firm_id).append(" firm_name:").append(firm_name).toString();
+		return new StringBuffer("firm_id:").append(firm_id).append("\nfirm_name:").append(firm_name).toString();
 	}
 }

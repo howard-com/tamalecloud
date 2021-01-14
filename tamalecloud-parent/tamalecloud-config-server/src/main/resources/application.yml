@@ -1,26 +1,34 @@
 ###服务启动端口号
 server:
   port: 8900
-###服务名称(服务注册到eureka名称)  
+###服务名称(服务注册到eureka名称) 
 spring:
     application:
         name: tamalecloud-config-server
     profiles:
-        active: native   
-    ###从云端读取配置信息
+        active: git
+---
+###从本地读取配置信息
+spring:
+    profiles: native
     cloud:
        config:
           server:
-             ###git方式
-#             git:
-#                uri: https://github.com/NightPoet/tamalecloud_config_central.git
-#                default-label: main
-#                #searchpath: -tamalecloud_config_central
-
              native:
-                search-locations: classpath:/ #配置文件存放的目录
+                search-locations: classpath:/config #配置文件存放的目录
                  ### 有目录的时候需要加这个 label: main
-       
+---
+###从git检索信息
+spring:
+    profiles: git
+    cloud:
+       config:
+          server:
+             git:
+                uri: https://github.com/howard-com/tamalecloud_config.git
+                default-label: main
+                #searchpath: -tamalecloud_config_cen
+---
 eureka:
    instance:
       ###心跳（续约）间隔时间，默认90s, 可不配置
