@@ -7,14 +7,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import tamalecloud.api.entity.TSEntity;
 import tamalecloud.api.entity.TSEntry;
-import tamalecloud.api.service.IEntryService;
 import tamalecloud.service.entry.feign.EntityServiceFeign;
 import tamalecloud.service.entry.feign.EntryCacheServiceFeign;
 
 //Entry Service的实现类
 @RestController
 
-public class EntryServiceImpl implements IEntryService {
+public class EntryServiceImpl {
 
 	// 注入其他service的Feign接口，以调用其业务方法
 	@Autowired

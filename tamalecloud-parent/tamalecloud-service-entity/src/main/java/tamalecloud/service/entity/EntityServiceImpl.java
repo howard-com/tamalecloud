@@ -8,13 +8,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import tamalecloud.api.entity.TSEntity;
-import tamalecloud.api.service.IEntityService;
 import tamalecloud.service.entity.feign.EntityCacheServiceFeign;
 
 //Entity Service的实现类
 @RestController
 @RefreshScope
-public class EntityServiceImpl implements IEntityService {
+public class EntityServiceImpl {
 
 	// 注入其他service的Feign接口，以调用其业务方法
 	@Autowired
