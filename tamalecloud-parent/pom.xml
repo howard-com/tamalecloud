@@ -80,5 +80,6 @@
 		<module>tamalecloud-service-cache</module>
 		<module>tamalecloud-config-server</module>
 		<module>eureka-server</module>
+		<module>tamalecloud-gateway-zuul</module>
 	</modules>
 </project>

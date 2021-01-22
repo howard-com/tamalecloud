@@ -1,12 +1,12 @@
 ###服务启动端口号
 server:
-  port: 8900
+  port: 8911
 ###服务名称(服务注册到eureka名称) 
 spring:
     application:
         name: tamalecloud-config-server
     profiles:
-        active: git
+        active: native
 ---
 ###从本地读取配置信息
 spring:

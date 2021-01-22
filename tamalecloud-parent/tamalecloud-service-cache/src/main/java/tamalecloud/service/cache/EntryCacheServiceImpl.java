@@ -26,7 +26,7 @@ public class EntryCacheServiceImpl implements IEntryCache {
 			res.setId(entry.getId());
 			res.setName(entry.getName());
 			res.setEntity(entry.getEntity());
-			//res.setName(res.getName() + " *Get from cache service[" + this.environment.getProperty("local.server.port") + "]");
+			res.setName(res.getName() + " *Get from cache service[" + this.environment.getProperty("local.server.port") + "]");
 		}
 		
 		return res;

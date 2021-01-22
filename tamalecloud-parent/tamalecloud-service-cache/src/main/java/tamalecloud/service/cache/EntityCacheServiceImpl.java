@@ -27,7 +27,7 @@ public class EntityCacheServiceImpl implements IEntityCache {
 			res = new TSEntity();
 			res.setId(entity.getId());
 			res.setName(entity.getName());
-			//res.setName(res.getName() + " *Get from cache service[" + this.environment.getProperty("local.server.port") + "]");
+			res.setName(res.getName() + " *Get from cache service[" + this.environment.getProperty("local.server.port") + "]");
 		}
 		
 		return res;
