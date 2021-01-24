@@ -12,6 +12,11 @@
 	<description>All cache components are put here.</description>
 
 	<dependencies>
+		<!-- SpringBoot整合Web组件 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
 		<!-- 引入entry service的接口 -->
 		<dependency>
 			<groupId>tamalecloud</groupId>

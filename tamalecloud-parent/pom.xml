@@ -27,11 +27,6 @@
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
-		<!-- SpringBoot整合Web组件 -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
 		<!-- SpringBoot整合eureka客户端 -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
