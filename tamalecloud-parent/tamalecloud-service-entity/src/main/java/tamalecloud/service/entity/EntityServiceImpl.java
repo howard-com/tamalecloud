@@ -60,4 +60,15 @@ public class EntityServiceImpl {
 	public String getFirmInfo() {
 		return new StringBuffer("firm_id:").append(firm_id).append("\nfirm_name:").append(firm_name).toString();
 	}
+	
+	@RequestMapping("/timeout")
+	public String testTimeout() {
+        try{
+            //睡5秒，网关Hystrix3秒超时，会触发熔断降级操作
+            Thread.sleep(3000);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+		return "此方法调用时间3秒";
+	}	
 }
