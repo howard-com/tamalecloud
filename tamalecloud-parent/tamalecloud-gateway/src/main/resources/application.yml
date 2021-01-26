@@ -1,23 +1,16 @@
-filters:
-# 熔断降级配置
-- name: Hystrix
-  args:
-    name : default
-    fallbackUri: forward:/error/fallback
-    
 server:
   port: 9000
 
-# hystrix 信号量隔离，3秒后自动超时
-hystrix:
-  command:
-    default:
-      execution:
-        isolation:
-          strategy: SEMAPHORE
-          thread:
-            timeoutInMilliseconds: 1000
-  shareSecurityContext: true
+## hystrix 信号量隔离，3秒后自动超时
+#hystrix:
+#   command:
+#    default:
+#      execution:
+#        isolation:
+#          strategy: SEMAPHORE
+#          thread:
+#            timeoutInMilliseconds: 1000
+#   shareSecurityContext: true
 
 #test:
   #  hostport: httpbin.org:80
@@ -35,6 +28,12 @@ spring:
       default-filters:
        - AuthCheck
        - TamaleBase
+       # 熔断降级配置
+       - name: hystrix
+         args:
+            name: fallbackcmd
+            fallbackUri: forward://error/fallback
+
 #      - PrefixPath=/httpbin
 #      - AddResponseHeader=X-Response-Default-Foo, Default-Bar
 
@@ -52,11 +51,6 @@ spring:
         filters:
         #去掉路径的前缀再转发给Entity service
         - StripPrefix=1
-        # 熔断降级配置
-        - name: Hystrix
-        args:
-        name : default
-        fallbackUri: forward:/error/fallback
       # =====================================
       - id: entry-service
         uri: lb://${entry_service_name}

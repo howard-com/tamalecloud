@@ -57,11 +57,6 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>
-		<!-- 引入hystrix来处理服务的熔断,降级 -->
-		<!-- dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
-		</dependency -->
 	</dependencies>
 	
 	<build>
