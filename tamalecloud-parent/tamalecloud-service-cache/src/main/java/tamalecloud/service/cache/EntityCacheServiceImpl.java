@@ -30,6 +30,13 @@ public class EntityCacheServiceImpl implements IEntityCache {
 			res.setName(res.getName() + " *Get from cache service[" + this.environment.getProperty("local.server.port") + "]");
 		}
 		
+		//故意增加访问时间出发降级，熔断
+		try {
+			Thread.sleep(900);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		return res;
 	}
 

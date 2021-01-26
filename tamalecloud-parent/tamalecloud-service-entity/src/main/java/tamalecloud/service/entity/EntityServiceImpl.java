@@ -6,6 +6,9 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.theme.SessionThemeResolver;
+
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
 import tamalecloud.api.entity.TSEntity;
 import tamalecloud.service.entity.feign.EntityCacheServiceFeign;
@@ -28,6 +31,7 @@ public class EntityServiceImpl {
 
 	@RequestMapping("/showEntityById")
 	public String showEntityById(@RequestParam("id") String id) {
+		System.out.println("showEntityById 线程名称" + Thread.currentThread().getName());
 		String res;
 		String baseUrl = "[调用类]:%s\n[结果]:\n%s";
 		TSEntity entity = entityCacheServiceFeign.getEntityById(id);
@@ -39,6 +43,18 @@ public class EntityServiceImpl {
 		}
 		
 		return String.format(baseUrl, this.getClass().toString(), res);
+	}
+	
+	// 开启熔断机制
+	@HystrixCommand(fallbackMethod = "showEntityByIdCallBack")
+	@RequestMapping("/showEntityByIdWithHystrix")
+	public String showEntityByIdWithHystrix(@RequestParam("id") String id) {
+		System.out.println("showEntityByIdWithHystrix 线程名称" + Thread.currentThread().getName());
+		return showEntityById(id);
+	}
+	
+	public String showEntityByIdCallBack(String id) {
+		return "服务降级提示：showEntityById服务当前不可用";
 	}
 
 	@RequestMapping("/getEntityByName")

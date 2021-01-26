@@ -36,6 +36,21 @@ management:
       exposure:
         include: "refresh" #暴露refresh端点
 
+feign:
+  hystrix:
+    enabled: true  
+
+#### hystrix禁止服务超时时间
+hystrix:  
+  command: 
+    default: 
+      execution:
+        thread: 
+          timeoutInMilliseconds: 6000
+        timeout: 
+          enabled: false
+
+
 ###Ribbon参数设置。Spring cloud 20.0.0以后已经不用     
 #tamalecloud-cache-service:
 #   ribbon:      
