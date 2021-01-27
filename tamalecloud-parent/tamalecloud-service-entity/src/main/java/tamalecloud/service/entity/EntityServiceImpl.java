@@ -29,9 +29,9 @@ public class EntityServiceImpl {
 	@Value("${firm_name}")
 	private String firm_name;
 
+	// 业务方法：从返回string类型的 entity信息
 	@RequestMapping("/showEntityById")
 	public String showEntityById(@RequestParam("id") String id) {
-		System.out.println("showEntityById 线程名称" + Thread.currentThread().getName());
 		String res;
 		String baseUrl = "[调用类]:%s\n[结果]:\n%s";
 		TSEntity entity = entityCacheServiceFeign.getEntityById(id);
@@ -45,26 +45,37 @@ public class EntityServiceImpl {
 		return String.format(baseUrl, this.getClass().toString(), res);
 	}
 	
+	
 	// 开启熔断机制
-	@HystrixCommand(fallbackMethod = "showEntityByIdCallBack")
+	// 业务方法：从返回string类型的 entity信息
+	// @HystrixCommand(fallbackMethod = "showEntityByIdCallBack")
 	@RequestMapping("/showEntityByIdWithHystrix")
 	public String showEntityByIdWithHystrix(@RequestParam("id") String id) {
 		System.out.println("showEntityByIdWithHystrix 线程名称" + Thread.currentThread().getName());
 		return showEntityById(id);
 	}
 	
-	public String showEntityByIdCallBack(String id) {
-		return "服务降级提示：showEntityById服务当前不可用";
-	}
-
+	// 业务方法，未添加熔断降级措施
 	@RequestMapping("/getEntityByName")
 	public String getEntityByName() {
-		return "getEntityById";
+		System.out.println("调用 getEntityByName（未开启熔断） 线程名称：" + Thread.currentThread().getName());
+		testTimeout("getEntityByName");
+		return "getEntityByName 调用成功";
 	}
 
+	// 业务方法，开启熔断降级措施
+	@HystrixCommand(fallbackMethod = "getAllEntitiesCallback")
 	@RequestMapping("/getAllEntities")
 	public String getAllEntities() {
-		return "getAllEntities";
+		System.out.println("调用 getAllEntities（开启熔断） 线程名称：" + Thread.currentThread().getName());
+		testTimeout("getAllEntities");
+		return "getAllEntities 调用成功";
+	}
+	
+	// 服务降级时的回调方法
+	public String getAllEntitiesCallback() {
+		System.out.println("触发 getAllEntitiesCallback 服务降级方法");
+		return "服务降级提示：服务当前不可用。";
 	}
 
 	@RequestMapping("/getEntityById")
@@ -78,13 +89,14 @@ public class EntityServiceImpl {
 	}
 	
 	@RequestMapping("/timeout")
-	public String testTimeout() {
+	public void testTimeout(String input) {
         try{
-            //睡5秒，网关Hystrix3秒超时，会触发熔断降级操作
-            Thread.sleep(3000);
+        	//System.out.println("模拟 " + input + " 服务的工作 线程名称：" + Thread.currentThread().getName());
+            //等待一定时间，会触发熔断降级操作
+            Thread.sleep(2000);
         }catch (Exception e){
-            e.printStackTrace();
+        	//e.printStackTrace();
         }
-		return "此方法调用时间3秒";
+		return;
 	}	
 }
