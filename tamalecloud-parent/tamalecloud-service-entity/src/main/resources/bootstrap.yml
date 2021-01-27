@@ -9,7 +9,7 @@ spring:
 ###指定配置的后缀
          profile: test
 ###读取的文件，可以有多个
-         name: common,entity-service-application
+         name: common
 ####指定config-server的地址（服务名）
          discovery:
             service-id: tamalecloud-config-server

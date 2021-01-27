@@ -38,7 +38,12 @@ management:
 
 feign:
   hystrix:
-    enabled: true  
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 1000
+        readTimeout: 1000
 
 #### hystrix禁止服务超时时间
 hystrix:
