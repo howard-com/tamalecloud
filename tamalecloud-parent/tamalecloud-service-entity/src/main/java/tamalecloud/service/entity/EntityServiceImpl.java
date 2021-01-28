@@ -45,39 +45,13 @@ public class EntityServiceImpl {
 		return String.format(baseUrl, this.getClass().toString(), res);
 	}
 	
-	
-	// 开启熔断机制
-	// 业务方法：从返回string类型的 entity信息
-	// @HystrixCommand(fallbackMethod = "showEntityByIdCallBack")
-	@RequestMapping("/showEntityByIdWithHystrix")
-	public String showEntityByIdWithHystrix(@RequestParam("id") String id) {
-		System.out.println("showEntityByIdWithHystrix 线程名称" + Thread.currentThread().getName());
-		return showEntityById(id);
-	}
-	
-	// 业务方法，未添加熔断降级措施
-	@RequestMapping("/getEntityByName")
-	public String getEntityByName() {
-		System.out.println("调用 getEntityByName（未开启熔断） 线程名称：" + Thread.currentThread().getName());
-		testTimeout("getEntityByName");
-		return "getEntityByName 调用成功";
-	}
-
-	// 业务方法，开启熔断降级措施
-	@HystrixCommand(fallbackMethod = "getAllEntitiesCallback")
+	// 业务方法：返回所有entity列表。Feign接口的已经启用熔断机制。一发生错误将返回提示信息。 
 	@RequestMapping("/getAllEntities")
 	public String getAllEntities() {
-		System.out.println("调用 getAllEntities（开启熔断） 线程名称：" + Thread.currentThread().getName());
-		testTimeout("getAllEntities");
-		return "getAllEntities 调用成功";
+		String res = entityCacheServiceFeign.getAllEntities();
+		return res;
 	}
 	
-	// 服务降级时的回调方法
-	public String getAllEntitiesCallback() {
-		System.out.println("触发 getAllEntitiesCallback 服务降级方法");
-		return "服务降级提示：服务当前不可用。";
-	}
-
 	@RequestMapping("/getEntityById")
 	public TSEntity getEntityById(String id) {
 		return entityCacheServiceFeign.getEntityById(id);
@@ -88,11 +62,44 @@ public class EntityServiceImpl {
 		return new StringBuffer("firm_id:").append(firm_id).append("\nfirm_name:").append(firm_name).toString();
 	}
 	
+	// 业务方法，Cache还未实现。这里简单返回字符串。
+	@RequestMapping("/getEntityByName")
+	public String getEntityByName() {
+		System.out.println("调用 getEntityByName（未开启熔断） 线程名称：" + Thread.currentThread().getName());
+		testTimeout("getEntityByName");
+		return "getEntityByName 调用成功";
+	}
+	//------------------------------------------Hystrix测试---------------------------------------------------------------
+	// 开启熔断降级机制
+	@HystrixCommand(fallbackMethod = "fallbackFunction")
+	@RequestMapping("/serviceA")
+	public String serviceA() {
+		System.out.println("调用[serviceA] 线程名称:" + Thread.currentThread().getName());
+		testTimeout("serviceA");
+		return "serviceA 调用成功";
+	}
+	
+	// 未添加熔断降级机制
+	@RequestMapping("/serviceB")
+	public String serviceB() {
+		System.out.println("调用[serviceB] 线程名称:" + Thread.currentThread().getName());
+		testTimeout("serviceB");
+		return "serviceB 调用成功";
+	}
+	
+	// 服务降级时的回调方法
+	public String fallbackFunction() {
+		System.out.println("*************************触发服务降级方法*********************************");
+		return "服务降级提示：服务当前不可用。";
+	}
+	
 	@RequestMapping("/timeout")
 	public void testTimeout(String input) {
+		int i = 10/0;
         try{
         	//System.out.println("模拟 " + input + " 服务的工作 线程名称：" + Thread.currentThread().getName());
             //等待一定时间，会触发熔断降级操作
+        	
             Thread.sleep(2000);
         }catch (Exception e){
         	//e.printStackTrace();

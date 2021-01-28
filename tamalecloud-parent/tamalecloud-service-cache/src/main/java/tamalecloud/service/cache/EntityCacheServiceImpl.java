@@ -1,5 +1,7 @@
 package tamalecloud.service.cache;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,23 +32,32 @@ public class EntityCacheServiceImpl implements IEntityCache {
 			res.setName(res.getName() + " *Get from cache service[" + this.environment.getProperty("local.server.port") + "]");
 		}
 		
-		//故意增加访问时间出发降级，熔断
-		try {
-			Thread.sleep(900);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
 		return res;
 	}
 
 	@RequestMapping("/getAllEntities")
 	public String getAllEntities() {
-		return "EntityCacheServiceImpl/getAllEntities";
+		ArrayList<TSEntity> entities = cacheData.getAllEntities();
+		StringBuffer resBuf = new StringBuffer("Entity列表：\n");
+		for (TSEntity i : entities) {
+			resBuf.append("id:" + i.getId()).append(" name:").append(i.getName()).append("\n");
+		}
+		
+		return resBuf.toString();
 	}
 
 	@RequestMapping("/addEntity")
 	public void addEntity(TSEntity o) {
 		cacheData.addEntity(o);
+	}
+	
+	//故意增加访问时间出发降级，熔断
+	private void fakeWorkload() {
+		System.out.println("***Entity CacheService 开始繁重的处理工作***");
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }

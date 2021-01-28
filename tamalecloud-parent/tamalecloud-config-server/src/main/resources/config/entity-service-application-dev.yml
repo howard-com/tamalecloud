@@ -37,7 +37,7 @@ management:
         include: "refresh" #暴露refresh端点
 
 feign:
-  hystrix:
+  circuitbreaker:
     enabled: true
   client:
     config:
@@ -48,13 +48,11 @@ feign:
 #### hystrix禁止服务超时时间
 hystrix:
   command:
-    default:
+    default: #也可以针对多个服务
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 1000
-          ##timeout:
-            ###enabled: true
+            timeoutInMilliseconds: 4000
 
 ###Ribbon参数设置。Spring cloud 20.0.0以后已经不用     
 #tamalecloud-cache-service:

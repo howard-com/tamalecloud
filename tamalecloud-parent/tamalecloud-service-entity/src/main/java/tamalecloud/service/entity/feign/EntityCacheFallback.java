@@ -4,22 +4,21 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import tamalecloud.api.entity.TSEntity;
-import tamalecloud.api.service.cache.IEntityCache;
 
 @Component
-@RequestMapping("fallback/")
+@RequestMapping("fallback")
 public class EntityCacheFallback implements EntityCacheServiceFeign {
 
 	@Override
 	public TSEntity getEntityById(String id) {
-		System.out.println("异常处理");
+		System.out.println("***异常处理 Entity Cache service 当前不可用！******");
 		return null;
 	}
 
 	@Override
 	public String getAllEntities() {
-		System.out.println("异常处理");
-		return null;
+		System.out.println("***异常处理 Entity Cache service 当前不可用！******");
+		return "---Cache service 不可用 请稍后再试---";
 	}
 
 }
