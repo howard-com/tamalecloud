@@ -29,11 +29,10 @@ spring:
        - AuthCheck
        - TamaleBase
        # 熔断降级配置
-       - name: Hystrix
+       - name: CircuitBreaker
          args:
-            name: fallbackcmd
-            fallbackUri: forward://error/fallback
-
+           name: fallbackcmd
+           fallbackUri: forward:/error/fallback
 #      - PrefixPath=/httpbin
 #      - AddResponseHeader=X-Response-Default-Foo, Default-Bar
 
