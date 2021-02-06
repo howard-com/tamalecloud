@@ -20,7 +20,7 @@
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
-				 <version>2020.0.0</version>
+				 <version>2020.0.1</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -47,7 +47,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-		<!-- Spring cloud 在20.0.0以后默认不开心bootstrap上下文，必须引入此包加入一个mark -->
+		<!-- Spring cloud 在20.0.0以后默认不开bootstrap上下文，必须引入此包加入一个mark -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-bootstrap</artifactId>
@@ -58,15 +58,26 @@
 			<artifactId>lombok</artifactId>
 		</dependency>
 	</dependencies>
+
 	
+	<properties>
+		<maven-checkstyle-plugin.failsOnError>true</maven-checkstyle-plugin.failsOnError> 
+        <maven-checkstyle-plugin.failsOnViolation>true</maven-checkstyle-plugin.failsOnViolation> 
+        <maven-checkstyle-plugin.includeTestSourceDirectory>true</maven-checkstyle-plugin.includeTestSourceDirectory> 
+	</properties>
+
 	<build>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+            <plugin> 
+                <groupId>io.spring.javaformat</groupId>
+                <artifactId>spring-javaformat-maven-plugin</artifactId>
+            </plugin>
+            <plugin> 
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
             </plugin>
         </plugins>
-    </build>
+	</build>
     
 	<modules>
 		<module>tamalecloud-api-service</module>
@@ -75,6 +86,6 @@
 		<module>tamalecloud-service-cache</module>
 		<module>tamalecloud-config-server</module>
 		<module>eureka-server</module>
-		<module>tamalecloud-gateway-zuul</module>
+		<module>tamalecloud-gateway</module>
 	</modules>
 </project>

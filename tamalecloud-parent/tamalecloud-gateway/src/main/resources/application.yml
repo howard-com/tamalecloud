@@ -24,6 +24,9 @@ spring:
 #  jmx:
 #    enabled: false
   cloud:
+    circuitBreaker:
+        resilience4j:
+            enabled: true
     gateway:
       default-filters:
        - AuthCheck

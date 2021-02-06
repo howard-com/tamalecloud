@@ -22,12 +22,11 @@ public class TamaleBaseGatewayFilter implements GatewayFilter, Ordered {
 	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 		String path = exchange.getRequest().getPath().toString();
 		String userId = exchange.getRequest().getHeaders().getValuesAsList("User-id").get(0);
-		//String serviceName = exchange.
 		
-        log.info("***【日志】准备调用服务：" + path + " userId:" + userId);
+        log.info("***【日志】准备调用服务：" + path + " userId:" + userId + "***");
         return chain.filter(exchange).then(Mono.fromRunnable(() ->
         {
-            log.info("***【日志】服务调用完毕 " + path);
+            log.info("***【日志】服务调用完毕 " + path + "***");
         }));
 	}
 
