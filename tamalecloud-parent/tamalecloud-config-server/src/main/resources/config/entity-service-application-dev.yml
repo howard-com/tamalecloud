@@ -4,7 +4,7 @@ server:
 spring:
    application:
       ###服务名称(服务注册到eureka名称)
-      name: ${entity_service_name}
+      name: ${entity_service_name} 
    cloud:
       loadbalancer:
          cache:
@@ -12,7 +12,6 @@ spring:
             enabled: true
             ###缓存过期时间（s） 默认35秒
             ttl: 1
-
 eureka:
    instance:
       ###心跳（续约）间隔时间，默认90s, 可不配置
@@ -49,10 +48,18 @@ feign:
 hystrix:
   command:
     default: #也可以针对多个服务
+      circuitBreaker:
+        sleepWindowInMilliseconds: 30000 #熔断多久以后开始尝试是否恢复，默认5s
+      fallback:
+        isolation:
+          semaphore:
+            maxConcurrentRequests: 20 #调用线程允许请求HystrixCommand.GetFallback()的最大数量，默认10。
       execution:
+        timeout: 
+          enable: true
         isolation:
           thread:
-            timeoutInMilliseconds: 4000
+            timeoutInMilliseconds: 1000
 
 ###Ribbon参数设置。Spring cloud 20.0.0以后已经不用     
 #tamalecloud-cache-service:

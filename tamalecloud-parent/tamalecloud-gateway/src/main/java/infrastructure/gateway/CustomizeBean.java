@@ -14,7 +14,9 @@ public class CustomizeBean {
 	@Bean
 	public Customizer<ReactiveResilience4JCircuitBreakerFactory> defaultCustomizer() {
 	    return factory -> factory.configureDefault(id -> new Resilience4JConfigBuilder(id)
-	    		.timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(1)).build())
+	    		//默认超时规则,默认1s,不使用断路器超时规则可以设置大一点
+	    		.timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(2)).build())
+	    		//默认超时规则,断路器规则
 	            .circuitBreakerConfig(CircuitBreakerConfig.ofDefaults())
 	            .build());
 	}

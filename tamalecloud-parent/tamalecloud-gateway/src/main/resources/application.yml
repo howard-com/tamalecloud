@@ -23,11 +23,11 @@ spring:
     name: tamalecloud-gateway
 #  jmx:
 #    enabled: false
-  cloud:
+  cloud:#    circuitbreaker:#      hystrix:#        enabled: true 
     circuitBreaker:
         resilience4j:
             enabled: true
-    gateway:
+    gateway:      filter:        circuit-breaker:          enabled: true
       default-filters:
        - AuthCheck
        - TamaleBase

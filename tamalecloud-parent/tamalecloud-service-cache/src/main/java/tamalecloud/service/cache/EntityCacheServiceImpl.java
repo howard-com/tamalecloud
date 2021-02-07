@@ -37,7 +37,10 @@ public class EntityCacheServiceImpl implements IEntityCache {
 
 	@RequestMapping("/getAllEntities")
 	public String getAllEntities() {
+		System.out.println("***调用Cache getAllEntities***");
+		
 		ArrayList<TSEntity> entities = cacheData.getAllEntities();
+		//fakeWorkload();
 		StringBuffer resBuf = new StringBuffer("Entity列表：\n");
 		for (TSEntity i : entities) {
 			resBuf.append("id:" + i.getId()).append(" name:").append(i.getName()).append("\n");

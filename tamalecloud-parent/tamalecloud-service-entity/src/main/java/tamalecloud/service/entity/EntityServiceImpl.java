@@ -1,5 +1,7 @@
 package tamalecloud.service.entity;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -95,12 +97,12 @@ public class EntityServiceImpl {
 	
 	@RequestMapping("/timeout")
 	public void testTimeout(String input) {
-		int i = 10/0;
+		//int i = 10/0;
         try{
         	//System.out.println("模拟 " + input + " 服务的工作 线程名称：" + Thread.currentThread().getName());
             //等待一定时间，会触发熔断降级操作
         	
-            Thread.sleep(2000);
+            Thread.sleep(900);
         }catch (Exception e){
         	//e.printStackTrace();
         }
