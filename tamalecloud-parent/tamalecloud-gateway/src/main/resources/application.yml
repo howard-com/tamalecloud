@@ -38,7 +38,6 @@ spring:
            fallbackUri: forward:/error/fallback
 #      - PrefixPath=/httpbin
 #      - AddResponseHeader=X-Response-Default-Foo, Default-Bar
-
       routes:
       # =====================================
       # to run server

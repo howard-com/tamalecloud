@@ -38,7 +38,7 @@ public class EntityCacheServiceImpl implements IEntityCache {
 	@RequestMapping("/getAllEntities")
 	public String getAllEntities() {
 		System.out.println("***调用Cache getAllEntities***");
-		
+
 		ArrayList<TSEntity> entities = cacheData.getAllEntities();
 		//fakeWorkload();
 		StringBuffer resBuf = new StringBuffer("Entity列表：\n");
@@ -54,7 +54,7 @@ public class EntityCacheServiceImpl implements IEntityCache {
 		cacheData.addEntity(o);
 	}
 	
-	//故意增加访问时间出发降级，熔断
+	//故意增加访问时间触发降级，熔断
 	private void fakeWorkload() {
 		System.out.println("***Entity CacheService 开始繁重的处理工作***");
 		try {

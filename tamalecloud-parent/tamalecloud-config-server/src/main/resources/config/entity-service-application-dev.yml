@@ -53,7 +53,7 @@ hystrix:
       fallback:
         isolation:
           semaphore:
-            maxConcurrentRequests: 20 #调用线程允许请求HystrixCommand.GetFallback()的最大数量，默认10。
+            maxConcurrentRequests: 200 #调用线程允许请求HystrixCommand.GetFallback()的最大数量，默认10。
       execution:
         timeout: 
           enable: true

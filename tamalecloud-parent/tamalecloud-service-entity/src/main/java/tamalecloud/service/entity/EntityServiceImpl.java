@@ -1,14 +1,11 @@
 package tamalecloud.service.entity;
 
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.theme.SessionThemeResolver;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
@@ -91,7 +88,7 @@ public class EntityServiceImpl {
 	
 	// 服务降级时的回调方法
 	public String fallbackFunction() {
-		System.out.println("*************************触发服务降级方法*********************************");
+		System.out.println("*触发服务降级*");
 		return "服务降级提示：服务当前不可用。";
 	}
 	
