@@ -87,5 +87,6 @@
 		<module>tamalecloud-config-server</module>
 		<module>eureka-server</module>
 		<module>tamalecloud-gateway</module>
+		<module>tamalecloud-service-contact</module>
 	</modules>
 </project>
