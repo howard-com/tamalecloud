@@ -45,9 +45,9 @@ public class EntityServiceImpl {
 	}
 	
 	// 业务方法：返回所有entity列表。Feign接口的已经启用熔断机制。一发生错误将返回提示信息。 
-	@RequestMapping("/getAllEntities")
-	public String getAllEntities() {
-		String res = entityCacheServiceFeign.getAllEntities();
+	@RequestMapping("/getAllEntityNames")
+	public String getAllEntityNames() {
+		String res = entityCacheServiceFeign.getAllEntityNames();
 		return res;
 	}
 	
@@ -59,6 +59,18 @@ public class EntityServiceImpl {
 	@RequestMapping("/getFirmInfo")
 	public String getFirmInfo() {
 		return new StringBuffer("firm_id:").append(firm_id).append("\nfirm_name:").append(firm_name).toString();
+	}
+	
+	@RequestMapping("/getAllEntities")
+	public String getAllEntities() {
+		TSEntity[] entities = entityCacheServiceFeign.getAllEntities();
+		StringBuffer res = new StringBuffer();
+		
+		for (TSEntity t : entities) {
+			res.append(new StringBuffer("Entity id=").append(t.getId()).append("\nEntity name=").append(t.getName()).append("\n"));
+		}
+		
+		return res.toString();
 	}
 	
 	// 业务方法，Cache还未实现。这里简单返回字符串。

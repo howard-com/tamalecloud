@@ -11,5 +11,8 @@ public interface IEntityCache {
 	public TSEntity getEntityById(@RequestParam("id") String id);
 
 	@RequestMapping("/getAllEntities")
-	public String getAllEntities();
+	public TSEntity[] getAllEntities();
+	
+	@RequestMapping("/getAllEntityNames")
+	public String getAllEntityNames();
 }

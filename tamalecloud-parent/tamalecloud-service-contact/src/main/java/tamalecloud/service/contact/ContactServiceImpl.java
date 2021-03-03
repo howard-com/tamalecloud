@@ -1,11 +1,14 @@
 package tamalecloud.service.contact;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import reactor.core.publisher.Mono;
+import tamalecloud.api.entity.TSEntity;
+import tamalecloud.service.contact.feign.EntityCacheServiceFeign;
 
 //Entity Service的实现类
 @RestController
@@ -13,8 +16,8 @@ import reactor.core.publisher.Mono;
 public class ContactServiceImpl {
 
 	// 注入其他service的Feign接口，以调用其业务方法
-//	@Autowired
-//	private EntityCacheServiceFeign entityCacheServiceFeign;
+	@Autowired
+	private EntityCacheServiceFeign entityCacheServiceFeign;
 
 	// 绑定配置中心里面的数据
 	@Value("${firm_id}")
@@ -39,11 +42,18 @@ public class ContactServiceImpl {
 //		return String.format(baseUrl, this.getClass().toString(), res);
 //	}
 
-	// 业务方法：返回所有entity列表。Feign接口的已经启用熔断机制。一发生错误将返回提示信息。
 	@RequestMapping("/getAllContacts")
 	public Mono<String> getAllContacts() {
-		String res= "All contact list.";
-		ok().
-		return Mono.just(res);
+
+		return Mono.create(sink-> {
+			TSEntity[] entities = entityCacheServiceFeign.getAllEntities();
+			StringBuffer res = new StringBuffer();
+//			TSEntity[] entities = {new TSEntity(), new TSEntity()};
+			for (TSEntity t : entities) {
+				res.append(new StringBuffer("Entity id=").append(t.getId()).append("\nEntity name=").append(t.getName()).append("\n"));
+			}			
+			
+			sink.success(res.toString());
+		} );
 	}
 }

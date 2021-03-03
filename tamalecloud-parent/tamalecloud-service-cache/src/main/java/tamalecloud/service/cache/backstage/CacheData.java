@@ -42,8 +42,8 @@ public class CacheData {
 	public ArrayList<TSEntity> getAllEntities() {
 		ArrayList<TSEntity> res = new ArrayList<TSEntity>();
 
-		for (HashMap.Entry<String, TSEntity> entry : entityMap.entrySet()) {
-			res.add(entry.getValue());
+		for (HashMap.Entry<String, TSEntity> entity : entityMap.entrySet()) {
+			res.add(entity.getValue());
 		}
 
 		return res;

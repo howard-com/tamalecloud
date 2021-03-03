@@ -35,8 +35,8 @@ public class EntityCacheServiceImpl implements IEntityCache {
 		return res;
 	}
 
-	@RequestMapping("/getAllEntities")
-	public String getAllEntities() {
+	@RequestMapping("/getAllEntityNames")
+	public String getAllEntityNames() {
 		System.out.println("***调用Cache getAllEntities***");
 
 		ArrayList<TSEntity> entities = cacheData.getAllEntities();
@@ -47,6 +47,12 @@ public class EntityCacheServiceImpl implements IEntityCache {
 		}
 		
 		return resBuf.toString();
+	}
+	
+	@RequestMapping("/getAllEntities")
+	public TSEntity[] getAllEntities() {
+		ArrayList<TSEntity> entities = cacheData.getAllEntities();
+		return entities.toArray(new TSEntity[0]);
 	}
 
 	@RequestMapping("/addEntity")
