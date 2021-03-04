@@ -28,7 +28,7 @@ public class AppCacheService {
 			cacheData.addEntity(entityObj);
 			
 			entityObj = new TSEntity();
-			entityObj.setId(String.valueOf(i));
+			entityObj.setId("c-" + String.valueOf(i));
 			entityObj.setName("Contact-" + String.valueOf(i));
 			cacheData.addEntity(entityObj);
 			
