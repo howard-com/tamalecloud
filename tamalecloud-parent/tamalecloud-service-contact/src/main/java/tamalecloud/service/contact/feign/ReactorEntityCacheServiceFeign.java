@@ -1,5 +1,6 @@
 package tamalecloud.service.contact.feign;
 
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import feign.Headers;
@@ -7,7 +8,7 @@ import feign.RequestLine;
 import reactor.core.publisher.Mono;
 import tamalecloud.api.entity.TSEntity;
 
-//@FeignClient(value="${cache_service_name}")
+@FeignClient(value="${cache_service_name}")
 @Headers({ "Accept: application/json" })
 public interface ReactorEntityCacheServiceFeign {
 	@RequestLine("GET /Entity/getEntityById")

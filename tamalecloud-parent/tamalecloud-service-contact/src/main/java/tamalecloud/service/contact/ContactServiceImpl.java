@@ -1,19 +1,26 @@
 package tamalecloud.service.contact;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 
 import com.netflix.client.ClientFactory;
 import com.netflix.client.DefaultLoadBalancerRetryHandler;
 import com.netflix.loadbalancer.AbstractLoadBalancer;
 import com.netflix.loadbalancer.reactive.LoadBalancerCommand;
 
-import feign.RequestLine;
 import reactivefeign.cloud.CloudReactiveFeign;
 import reactivefeign.webclient.WebReactiveFeign;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import tamalecloud.api.entity.TSEntity;
 import tamalecloud.service.contact.feign.ReactorEntityCacheServiceFeign;
@@ -23,6 +30,8 @@ import tamalecloud.service.contact.feign.ReactorEntityCacheServiceFeign;
 @RefreshScope
 public class ContactServiceImpl {
 
+	@Autowired
+	DiscoveryClient discoveryClient;
 	// 注入其他service的Feign接口，以调用其业务方法
 //	@Autowired
 //	private EntityCacheServiceFeign entityCacheServiceFeign;
@@ -38,6 +47,9 @@ public class ContactServiceImpl {
 
 	@Value("${firm_name}")
 	private String firm_name;
+
+	@Value("${cache_service_name}")
+	private String cacheServiceName;
 
 	// 业务方法：从返回string类型的 entity信息
 //	@RequestMapping("/showEntityById")
@@ -64,13 +76,24 @@ public class ContactServiceImpl {
 //		
 //		return res;
 
-		String serviceName = "tamalecloud-cache-service";
+		String cacheSvcUrl = null;
+		//System.out.println("cacheServiceName=" + cacheServiceName);
+
+		List<ServiceInstance> serviceList = discoveryClient.getInstances(cacheServiceName);
+		if (serviceList == null || serviceList.size() == 0) {
+			return null;
+		}
+
+		ServiceInstance serviceInstance = serviceList.get(0);
+		cacheSvcUrl = serviceInstance.getUri().toString();
+
+		//System.out.println("cacheSvcUrl=" + cacheSvcUrl);
 
 		ReactorEntityCacheServiceFeign client = CloudReactiveFeign
-				.<ReactorEntityCacheServiceFeign>builder(WebReactiveFeign.<ReactorEntityCacheServiceFeign>builder())
+				.<ReactorEntityCacheServiceFeign>builder(WebReactiveFeign.builder())
 				.setLoadBalancerCommandFactory(s -> LoadBalancerCommand.builder()
 						.withLoadBalancer(
-								AbstractLoadBalancer.class.cast(ClientFactory.getNamedLoadBalancer(serviceName)))
+								AbstractLoadBalancer.class.cast(ClientFactory.getNamedLoadBalancer(cacheServiceName)))
 						.withRetryHandler(new DefaultLoadBalancerRetryHandler(1, 1, true)).build())
 				.fallback(new ReactorEntityCacheServiceFeign() {
 					@Override
@@ -87,10 +110,22 @@ public class ContactServiceImpl {
 					public Mono<String> getAllEntityNames() {
 						return null;
 					}
-				}).target(ReactorEntityCacheServiceFeign.class, "http://" + serviceName);
+				}).target(ReactorEntityCacheServiceFeign.class, cacheSvcUrl);
 
 		Mono<TSEntity[]> res = client.getAllEntities();
 		
+		res.map(entityArray -> {
+			System.out.println("11111111111111111");
+			Flux<TSEntity> t = Flux.fromArray(entityArray);
+			return t;
+		})
+		.map(entity -> {
+			System.out.println(entity);
+			return entity;
+		});
+		
+		res.subscribe();
+
 		return res;
 
 //		return Mono.create(sink -> {

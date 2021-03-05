@@ -1,6 +1,8 @@
 ###服务启动端口号
 server:
    port: ${cache_service_port}
+   ###允许ip访问。否则只能用localhost访问。 如果仅允许本机访问 设置为127.0.0.1
+   address: 0.0.0.0 
 spring:
    application:
       ###服务名称(服务注册到eureka名称)
