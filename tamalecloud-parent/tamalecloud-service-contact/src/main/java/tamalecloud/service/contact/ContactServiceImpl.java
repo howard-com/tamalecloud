@@ -1,5 +1,6 @@
 package tamalecloud.service.contact;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,22 +52,6 @@ public class ContactServiceImpl {
 	@Value("${cache_service_name}")
 	private String cacheServiceName;
 
-	// 业务方法：从返回string类型的 entity信息
-//	@RequestMapping("/showEntityById")
-//	public String showEntityById(@RequestParam("id") String id) {
-//		String res;
-//		String baseUrl = "[调用类]:%s\n[结果]:\n%s";
-//		TSEntity entity = entityCacheServiceFeign.getEntityById(id);
-//
-//		if (entity != null) {
-//			res = new StringBuffer("Entity id=").append(entity.getId()).append("\nEntity name=").append(entity.getName()).toString();
-//		} else {
-//			res = new StringBuffer("未找到id为").append(id).append("的entity").toString();
-//		}
-//		
-//		return String.format(baseUrl, this.getClass().toString(), res);
-//	}
-
 	@RequestMapping("/getAllContacts")
 	public Mono<TSEntity[]> getAllContacts() {
 //		ReactorEntityCacheServiceFeign client = WebReactiveFeign.<ReactorEntityCacheServiceFeign>builder()
@@ -77,7 +62,7 @@ public class ContactServiceImpl {
 //		return res;
 
 		String cacheSvcUrl = null;
-		//System.out.println("cacheServiceName=" + cacheServiceName);
+		// System.out.println("cacheServiceName=" + cacheServiceName);
 
 		List<ServiceInstance> serviceList = discoveryClient.getInstances(cacheServiceName);
 		if (serviceList == null || serviceList.size() == 0) {
@@ -87,7 +72,7 @@ public class ContactServiceImpl {
 		ServiceInstance serviceInstance = serviceList.get(0);
 		cacheSvcUrl = serviceInstance.getUri().toString();
 
-		//System.out.println("cacheSvcUrl=" + cacheSvcUrl);
+		// System.out.println("cacheSvcUrl=" + cacheSvcUrl);
 
 		ReactorEntityCacheServiceFeign client = CloudReactiveFeign
 				.<ReactorEntityCacheServiceFeign>builder(WebReactiveFeign.builder())
@@ -112,32 +97,29 @@ public class ContactServiceImpl {
 					}
 				}).target(ReactorEntityCacheServiceFeign.class, cacheSvcUrl);
 
-		Mono<TSEntity[]> res = client.getAllEntities();
-		
-		res.map(entityArray -> {
-			System.out.println("11111111111111111");
-			Flux<TSEntity> t = Flux.fromArray(entityArray);
-			return t;
-		})
-		.map(entity -> {
-			System.out.println(entity);
-			return entity;
+		return client.getAllEntities().flatMap(entityList -> {
+			ArrayList<TSEntity> contactList = new ArrayList();
+			for (TSEntity entity : entityList) {
+				if (entity.getId().startsWith("c")) {
+					contactList.add(entity);
+				}
+			}
+
+			return Mono.just(contactList.toArray(new TSEntity[contactList.size()]));
 		});
-		
-		res.subscribe();
 
-		return res;
-
-//		return Mono.create(sink -> {
-//			TSEntity[] entities = entityCacheServiceFeign.getAllEntities();
-//			StringBuffer res = new StringBuffer();
-////			TSEntity[] entities = {new TSEntity(), new TSEntity()};
-//			for (TSEntity t : entities) {
-//				res.append(new StringBuffer("Entity id=").append(t.getId()).append("\nEntity name=").append(t.getName())
-//						.append("\n"));
+//		Mono<TSEntity[]> res = client.getAllEntities();
+//		Mono<TSEntity[]> res2 = res.flatMap(entityList -> {
+//			ArrayList<TSEntity> contactList = new ArrayList();
+//			for (TSEntity entity:entityList) {
+//				if (entity.getId().startsWith("c")) {
+//					contactList.add(entity);
+//				}
 //			}
-//
-//			sink.success(res.toString());
+//			
+//			return Mono.just(contactList.toArray(new TSEntity[contactList.size()]));
 //		});
+//		
+//		return res2;
 	}
 }
